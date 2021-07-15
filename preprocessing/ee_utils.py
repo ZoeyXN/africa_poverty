@@ -36,62 +36,11 @@ def df_to_fc(df: pd.DataFrame, lat_colname: str = 'lat',
     return ee.FeatureCollection(ee_features)
 
 
-# def surveyyear_to_range(survey_year: int, nl: bool = False) -> Tuple[str, str]:
-#     '''Returns the start and end dates for filtering satellite images for a
-#     survey beginning in the specified year.
-
-#     Calibrated DMSP Nighttime Lights only exist for 3 relevant date ranges,
-#     which Google Earth Engine filters by their start date. For more info, see
-#     https://www.ngdc.noaa.gov/eog/dmsp/download_radcal.html.
-
-#         DMSP range               | we use for these surveys1
-#         -------------------------|-------------------------
-#         2010-01-11 to 2011-07-31 | 2006 to 2011
-#         2010-01-11 to 2010-12-09 | 2006 to 2011
-#         2005-11-28 to 2006-12-24 | 2003 to 2005
-
-#     Args
-#     - survey_year: int, year that survey was started
-#     - nl: bool, whether to use special range for night lights
-
-#     Returns
-#     - start_date: str, start date for filtering satellite images (yyyy-mm-dd)
-#     - end_date: str, end date for filtering satellite images (yyyy-mm-dd)
-#     '''
-#     if 2000 <= survey_year and survey_year <= 2002:
-#         start_date = '2000-1-1'
-#         end_date = '2002-12-31'
-#     elif 2003 <= survey_year and survey_year <= 2005:
-#         start_date = '2003-1-1'
-#         end_date = '2005-12-31'
-#     elif 2006 <= survey_year and survey_year <= 2008:
-#         start_date = '2006-1-1'
-#         end_date = '2008-12-31'
-#         if nl:
-#             end_date = '2010-12-31'  # artificially extend end date for DMSP
-#     elif 2009 <= survey_year and survey_year <= 2011:
-#         start_date = '2009-1-1'
-#         end_date = '2011-12-31'
-#     elif 2012 <= survey_year and survey_year <= 2014:
-#         start_date = '2012-1-1'
-#         end_date = '2014-12-31'
-#     elif 2015 <= survey_year and survey_year <= 2017:
-#         start_date = '2015-1-1'
-#         end_date = '2017-12-31'
-#     elif survey_year == 2018:
-#         start_date = '2018-1-1'
-#         end_date = '2018-12-31'
-#     else:
-#         raise ValueError(f'Invalid survey_year: {survey_year}. '
-#                          'Must be between 2009 and 2017 (inclusive)')
-#     return start_date, end_date
-
-
 def surveyyear_to_range(survey_year: int, nl: bool = False) -> Tuple[str, str]:
     '''Returns the start and end dates for filtering satellite images for a
     survey beginning in the specified year.
 
-    Calibrated DMSP Nighttime Lights only exist for 6 relevant date ranges,
+    Calibrated DMSP Nighttime Lights only exist for 3 relevant date ranges,
     which Google Earth Engine filters by their start date. For more info, see
     https://www.ngdc.noaa.gov/eog/dmsp/download_radcal.html.
 
@@ -100,9 +49,6 @@ def surveyyear_to_range(survey_year: int, nl: bool = False) -> Tuple[str, str]:
         2010-01-11 to 2011-07-31 | 2006 to 2011
         2010-01-11 to 2010-12-09 | 2006 to 2011
         2005-11-28 to 2006-12-24 | 2003 to 2005
-        2004-01-18 to 2004-12-16 | 2004 to 2004
-        2002-12-30 to 2003-11-27 | 2002 to 2003
-        2000-01-03 to 2000-12-29 | 2000 to 2001
 
     Args
     - survey_year: int, year that survey was started
@@ -112,9 +58,63 @@ def surveyyear_to_range(survey_year: int, nl: bool = False) -> Tuple[str, str]:
     - start_date: str, start date for filtering satellite images (yyyy-mm-dd)
     - end_date: str, end date for filtering satellite images (yyyy-mm-dd)
     '''
-    start_date = f'{survey_year}-1-1'
-    end_date = f'{survey_year}-12-31'
+    if 2000 <= survey_year and survey_year <= 2002:
+        start_date = '2000-1-1'
+        end_date = '2002-12-31'
+    elif 2003 <= survey_year and survey_year <= 2005:
+        start_date = '2003-1-1'
+        end_date = '2005-12-31'
+    elif 2006 <= survey_year and survey_year <= 2008:
+        start_date = '2006-1-1'
+        end_date = '2008-12-31'
+        if nl:
+            end_date = '2010-12-31'  # artificially extend end date for DMSP
+    elif 2009 <= survey_year and survey_year <= 2011:
+        start_date = '2009-1-1'
+        end_date = '2011-12-31'
+    elif 2012 <= survey_year and survey_year <= 2014:
+        start_date = '2012-1-1'
+        end_date = '2014-12-31'
+    elif 2015 <= survey_year and survey_year <= 2017:
+        start_date = '2015-1-1'
+        end_date = '2017-12-31'
+    elif survey_year == 2018:
+        start_date = '2018-1-1'
+        end_date = '2018-12-31'
+    else:
+        raise ValueError(f'Invalid survey_year: {survey_year}. '
+                         'Must be between 2009 and 2017 (inclusive)')
     return start_date, end_date
+
+
+# def surveyyear_to_range(survey_year: int, nl: bool = False) -> Tuple[str, str]:
+#     '''Returns the start and end dates for filtering satellite images for a
+#     survey beginning in the specified year.
+
+#     Calibrated DMSP Nighttime Lights only exist for 6 relevant date ranges,
+#     which Google Earth Engine filters by their start date. For more info, see
+#     https://www.ngdc.noaa.gov/eog/dmsp/download_radcal.html.
+
+#         DMSP range               | we use for these surveys1
+#         -------------------------|-------------------------
+#         2010-01-11 to 2011-07-31 | 2006 to 2011
+#         2010-01-11 to 2010-12-09 | 2006 to 2011
+#         2005-11-28 to 2006-12-24 | 2003 to 2005
+#         2004-01-18 to 2004-12-16 | 2004 to 2004
+#         2002-12-30 to 2003-11-27 | 2002 to 2003
+#         2000-01-03 to 2000-12-29 | 2000 to 2001
+
+#     Args
+#     - survey_year: int, year that survey was started
+#     - nl: bool, whether to use special range for night lights
+
+#     Returns
+#     - start_date: str, start date for filtering satellite images (yyyy-mm-dd)
+#     - end_date: str, end date for filtering satellite images (yyyy-mm-dd)
+#     '''
+#     start_date = f'{survey_year}-1-1'
+#     end_date = f'{survey_year}-12-31'
+#     return start_date, end_date
 
 
 def decode_qamask(img: ee.Image) -> ee.Image:

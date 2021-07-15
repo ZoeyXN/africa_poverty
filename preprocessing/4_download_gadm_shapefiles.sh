@@ -10,62 +10,96 @@
 mkdir -p ../data/shapefiles
 cd ../data/shapefiles
 
-africa_country_codes=(
-    "DZA"  # Algeria
+lmic_country_codes=(
+    "AFG"  # Afghanistan
+    "ALB"  # Albania
     "AGO"  # Angola
+    "ARM"  # Armenia
+    "AZE"  # Azerbaijan
+    "BGD"  # Bangladesh
     "BEN"  # Benin
+    "BOL"  # Bolivia
     "BWA"  # Botswana
+    "BRA"  # Brazil
     "BFA"  # Burkina Faso
     "BDI"  # Burundi
-    "CPV"  # Cabo Verde
+    "KHM"  # Cambodia
     "CMR"  # Cameroon
+    "CPV"  # Cape Verde
     "CAF"  # Central African Republic
     "TCD"  # Chad
+    "COL"  # Colombia
     "COM"  # Comoros
+    "COG"  # Congo
+    "COD"  # Congo Democratic Republic
     "CIV"  # Cote d'Ivoire
-    "COD"  # Democratic Republic of the Congo
-    "DJI"  # Djibouti
+    "DOM"  # Dominican Republic
+    "ECU"  # Ecuador
     "EGY"  # Egypt
+    "SLV"  # El Salvador
     "GNQ"  # Equatorial Guinea
     "ERI"  # Eritrea
     "ETH"  # Ethiopia
     "GAB"  # Gabon
     "GMB"  # Gambia
     "GHA"  # Ghana
+    "GTM"  # Guatemala
     "GIN"  # Guinea
-    "GNB"  # Guinea-Bissau
+    "GUY"  # Guyana
+    "HTI"  # Haiti
+    "HND"  # Honduras
+    "IND"  # India
+    "IDN"  # Indonesia
+    "JOR"  # Jordan
+    "KAZ"  # Kazakhstan
     "KEN"  # Kenya
+    "KGZ"  # Kyrgyz Republic
+    "LAO"  # Lao People's Democratic Republic
     "LSO"  # Lesotho
     "LBR"  # Liberia
-    "LBY"  # Libya
     "MDG"  # Madagascar
     "MWI"  # Malawi
+    "MDV"  # Maldives
     "MLI"  # Mali
     "MRT"  # Mauritania
-    "MUS"  # Mauritius
+    "MEX"  # Mexico
+    "MDA"  # Moldova
     "MAR"  # Morocco
     "MOZ"  # Mozambique
-    "MYT"  # **Mayotte - technically a French territory
+    "MMR"  # Myanmar
     "NAM"  # Namibia
+    "NPL"  # Nepal
+    "NIC"  # Nicaragua
     "NER"  # Niger
     "NGA"  # Nigeria
-    "REU"  # **Réunion - technically a French territory
-    "COG"  # Republic of the Congo
+    # Nigeria (Ondo State)
+    "PAK"  # Pakistan
+    "PRY"  # Paraguay
+    "PER"  # Peru
+    "PHL"  # Philippines
     "RWA"  # Rwanda
+    "WSM"  # Samoa
     "STP"  # Sao Tome and Principe
     "SEN"  # Senegal
-    "SYC"  # Seychelles
     "SLE"  # Sierra Leone
-    "SOM"  # Somalia
     "ZAF"  # South Africa
-    "SSD"  # South Sudan
+    "LKA"  # Sri Lanka
     "SDN"  # Sudan
     "SWZ"  # Swaziland
+    "TJK"  # Tajikistan
     "TZA"  # Tanzania
+    "THA"  # Thailand
+    "TLS"  # Timor-Leste
     "TGO"  # Togo
+    "TTO"  # Trinidad and Tobago
     "TUN"  # Tunisia
+    "TUR"  # Turkey
+    "TKM"  # Turkmenistan
     "UGA"  # Uganda
-    "ESH"  # **Western Sahara - disputed territory
+    "UKR"  # Ukraine
+    "UZB"  # Uzbekistan
+    "VNM"  # Vietnam
+    "YEM"  # Yemen
     "ZMB"  # Zambia
     "ZWE"  # Zimbabwe
 )
@@ -73,32 +107,62 @@ africa_country_codes=(
 #    but was otherwise not considered in this paper
 
 dhs_country_codes=(
+    "ALB"  # Albania
     "AGO"  # Angola
+    "ARM"  # Armenia
+    "BGD"  # Bangladesh
     "BEN"  # Benin
+    "BOL"  # Bolivia
     "BFA"  # Burkina Faso
+    "BDI"  # Burundi
+    "KHM"  # Cambodia
     "CMR"  # Cameroon
+    "TCD"  # Chad
+    "COD"  # Congo Democratic Republic
     "CIV"  # Cote d'Ivoire
-    "COD"  # Democratic Republic of the Congo
+    "DOM"  # Dominican Republic
+    "EGY"  # Egypt
     "ETH"  # Ethiopia
+    "GAB"  # Gabon
     "GHA"  # Ghana
+    "GTM"  # Guatemala
     "GIN"  # Guinea
+    "GUY"  # Guyana
+    "HTI"  # Haiti
+    "IND"  # India
+    "IDN"  # Indonesia
+    "JOR"  # Jordan
     "KEN"  # Kenya
+    "KGZ"  # Kyrgyz Republic
     "LSO"  # Lesotho
+    "LBR"  # Liberia
+    "MDG"  # Madagascar
     "MWI"  # Malawi
     "MLI"  # Mali
+    "MDA"  # Moldova
+    "MAR"  # Morocco
     "MOZ"  # Mozambique
+    "MMR"  # Myanmar
+    "NAM"  # Namibia
+    "NPL"  # Nepal
     "NGA"  # Nigeria
+    "PAK"  # Pakistan
+    "PER"  # Peru
+    "PHL"  # Philippines
     "RWA"  # Rwanda
     "SEN"  # Senegal
     "SLE"  # Sierra Leone
+    "SWZ"  # Swaziland
+    "TJK"  # Tajikistan
     "TZA"  # Tanzania
+    "TLS"  # Timor-Leste
     "TGO"  # Togo
     "UGA"  # Uganda
     "ZMB"  # Zambia
     "ZWE"  # Zimbabwe
 )
 
-for code in ${africa_country_codes[@]}
+for code in ${lmic_country_codes[@]}
 do
     echo "Getting shapefiles for ${code}"
 
@@ -117,6 +181,7 @@ do
 
         # if no level-2 admin regions exist, then try unzipping level-1
         # - this should only apply to Lesotho (LSO)
+        #   and also Armenia (ARM) and Moldova (MDA) for LMIC
         if [ ! -f "./gadm36_${code}_shp/gadm36_${code}_2.shp" ]
         then
             echo "- No level-2 admin shapefile exists. Trying level-1."
