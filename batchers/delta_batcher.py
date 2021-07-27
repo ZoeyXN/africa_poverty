@@ -140,7 +140,7 @@ class DeltaBatcher(Batcher):
             ds = ds.map(self.augment_example)
 
         # batch then repeat => batches respect epoch boundaries
-        # - i.e. last batch of each epoch might be smaller than batch_size
+        # - last batch of each epoch might be smaller than batch_size
         ds = ds.batch(self.batch_size)
         ds = ds.repeat(self.epochs)
 
